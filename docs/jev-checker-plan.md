@@ -1,6 +1,6 @@
 # Jev checker plan
 
-This program ships a TypeSafe Jev checker runner and a design skill that writes approved definitions. It is for an operator who wants many small Jev questions composed in code, not a review chatbot. The rule is that a definition cannot run until the operator approves every item, and a report never authorizes merge, delete, publish, or send. The stack is PR1 then PR2. Hooks, product checklists, and per-target skills stay out. The GitHub repository is https://github.com/s-hiraoku/jev-checkkit.
+This program ships a TypeSafe Jev checker runner and a design skill that writes approved definitions. It is for an operator who wants many small Jev questions composed in code, not a review chatbot. The rule is that a definition cannot run until the operator approves every item, and a report never authorizes merge, delete, publish, or send. The stack is PR1 then PR2. This program excludes hooks, a default per-target skill, and any checklist the operator has not approved. The five candidate subjects in `README.md` stay in scope. The GitHub repository is https://github.com/s-hiraoku/jev-checkkit.
 
 ## How to read this
 
@@ -229,7 +229,7 @@ Settled by reading, not by a run.
 Still unproven.
 
 - Live Jev accuracy, latency, and cost on any real subject. This environment has no `TYPESAFE_API_KEY`.
-- Whether a PR description or a development log is the first product subject. The operator must pick that later and approve the list.
+- Which of the five README subjects is first. The operator picks one and approves that list. Do not drop the other four.
 - Whether Granola holds extra decisions. The Granola MCP in this session rejected the account.
 
 ## Appendix B. Alternatives rejected
