@@ -2,7 +2,7 @@
 
 TypeSafe の Jev を使い、対象ごとの承認済みチェックリストを高速に検査する。Jev は文章を書かない。状態と型付きの小さな質問を受け、確率付きの判定を返す。このリポジトリはその判定を合成するランナーと、チェックリストを設計するスキルを置く。
 
-いまある成果物は計画だけである。[`docs/jev-checker-plan.md`](docs/jev-checker-plan.md) を読む。ランナーも CLI もまだない。
+ランナーと CLI `jev-check` は入っている。設計スキルはまだない。計画は [`docs/jev-checker-plan.md`](docs/jev-checker-plan.md) にある。
 
 リポジトリは https://github.com/s-hiraoku/jev-checkkit 。
 
@@ -79,16 +79,92 @@ TypeSafe の Jev を使い、対象ごとの承認済みチェックリストを
 
 ## 実行
 
-未実装である。実装後の想定は次のとおり。
+Node 20 以上。
 
 ```bash
 npm ci
+npm run build
 npm test
 npx jev-check --definition <file> --input <file>
 npx jev-check --dry-run --definition <file> --input <file>
 npx jev-check --replay fixtures/replay/pass.json
 ```
 
-`TYPESAFE_API_KEY` が無いときは live 呼び出しをしない。`--dry-run` と `--replay` で確認する。キーをログに出さない。
+定義の解析と承認の確認を先に行い、`TYPESAFE_API_KEY` は Jev に送る直前にだけ見る。キーが無いときは live 呼び出しをせず、終了コード 3 で止まる。`--dry-run` と `--replay` はキー無しで動く。キーはログにも出力にも出さない。
+
+### 定義ファイル
+
+`--definition` に渡す JSON。`approval.status` が `approved` でない定義は解析の時点で拒否し、`{ "error": ... }` を出して終了コード 2 で止まる。
+
+```json
+{
+  "id": "sample-paragraph",
+  "version": 1,
+  "subject": "A short English paragraph",
+  "approval": { "status": "approved", "at": "2026-09-19T00:00:00Z", "by": "fixture" },
+  "questions": [
+    { "id": "one_claim", "type": "noul", "instructions": "...", "criteria": { "true": "...", "false": "..." }, "passAt": 0.8, "failAt": 0.2 },
+    { "id": "tone", "type": "choice", "instructions": "...", "criteria": { "neutral": "...", "hostile": "..." }, "options": { "neutral": "pass", "hostile": "fail" }, "confidenceFloor": 0.6 },
+    { "id": "clarity", "type": "score", "instructions": "...", "criteria": ["...", "...", "..."], "passAt": 1.5, "failAt": 0.5, "confidenceFloor": 0.6 },
+    { "id": "cites_source", "type": "noul", "instructions": "...", "applyWhen": { "path": "claimsSource", "op": "equals", "value": true } }
+  ]
+}
+```
+
+- `id` は定義の安定 ID。`version` は 0 以上の整数。`questions` は 1 件以上で、質問の `id` は重複できない。
+- `noul` は `passAt` 以上で pass、`failAt` 以下で fail、その間は review。省略時は 0.8 と 0.2。
+- `choice` は `options` でラベルを pass、fail、review のどれかに対応させる。表にないラベルは review。
+- `score` は `passAt` と `failAt` を noul と同じ帯として使う。両方とも必須。`criteria` は 2 件以上の配列。
+- `passAt` が `failAt` 以下の定義は拒否する。
+- `choice` と `score` の `confidenceFloor` は任意。`confidence` がこれを下回ると、対応先が pass でも review。
+- `applyWhen` は任意。`{ "path": "a.b", "op": "exists" }` か `{ "path": "a.b", "op": "equals", "value": <JSON> }` で、`state` のドット区切りパスに対して評価する。偽なら Jev に送らず not_applicable にする。
+- `instructions` と `criteria` はそのまま Jev に送る。`applyWhen`、閾値、`options` は送らない。
+
+### 入力ファイル
+
+`--input` に渡す JSON。`state` だけを読み、他のキーは無視する。replay ファイルをそのまま渡してもよい。
+
+```json
+{ "state": { "paragraph": "...", "claimsSource": true } }
+```
+
+### replay ファイル
+
+`--replay` に渡す JSON。`answers` が Jev の代わりになり、ネットワークには出ない。`definition` は replay ファイルからの相対パスで、`--definition` を付ければそちらを使う。`--input` を付ければ `state` もそちらを使う。`usage` は任意。`answers` の形は SDK の応答と同じにする。
+
+```json
+{
+  "definition": "../sample-approved.checker.json",
+  "state": { "paragraph": "...", "claimsSource": true },
+  "answers": {
+    "one_claim": { "type": "noul", "noul": 0.93 },
+    "tone": { "type": "choice", "choice": "neutral", "confidence": 0.9, "probabilities": { "neutral": 0.9, "promotional": 0.07, "hostile": 0.03 } },
+    "clarity": { "type": "score", "score": 1.8, "confidence": 0.85, "legend": { "0": "...", "1": "...", "2": "..." }, "probabilities": { "0": 0.02, "1": 0.16, "2": 0.82 } }
+  },
+  "usage": { "input_tokens": 120, "output_tokens": 8 }
+}
+```
+
+`fixtures/replay/` に pass、fail、review、not-applicable、missing-answer の 5 件がある。対象は短い英文段落のサンプルで、製品チェックリストではない。
+
+### レポート
+
+標準出力に JSON を 1 件出す。
+
+- `definition` は定義の `id` と `version`。
+- `items` は質問ごとの `id`、`verdict`、`reason`、あれば Jev の `answer`。定義の順に並ぶ。
+- `usage` は `input_tokens` と `output_tokens`。Jev を呼ばなかったときは 0。
+- `timing` は `wallMs` と `jevMs`。
+
+マージ、削除、公開、送信を許可するフィールドは無い。`--dry-run` は Jev に送る予定の `state` と `questions` を出して終了コード 0 で止まり、`answers` を含まない。
+
+### 終了コード
+
+| コード | 意味 |
+| --- | --- |
+| 0 | すべての項目が pass か not_applicable |
+| 1 | fail が 1 件以上ある |
+| 2 | fail は無く、review か error が 1 件以上ある。または定義や入力ファイルを拒否した |
+| 3 | `TYPESAFE_API_KEY` が無い、または Jev への送信に失敗した |
 
 実装の順番と検証箱は [`docs/jev-checker-plan.md`](docs/jev-checker-plan.md) にある。

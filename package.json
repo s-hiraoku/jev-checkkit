@@ -1,0 +1,25 @@
+{
+  "name": "jev-checkkit",
+  "version": "0.1.0",
+  "description": "Runner and schema for approved Jev checker definitions on TypeSafe",
+  "type": "module",
+  "bin": {
+    "jev-check": "dist/cli.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc && node -e \"fs.chmodSync('dist/cli.js', 0o755)\"",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test tests/*.test.ts"
+  },
+  "dependencies": {
+    "@typesafe-ai/sdk": "0.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.2",
+    "tsx": "4.23.13",
+    "typescript": "7.0.2"
+  }
+}

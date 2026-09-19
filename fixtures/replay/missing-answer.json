@@ -1,0 +1,24 @@
+{
+  "definition": "../sample-approved.checker.json",
+  "state": {
+    "paragraph": "The town library now opens at nine on weekdays. Visits doubled after the reading room was renovated, according to the library's annual report.",
+    "claimsSource": true
+  },
+  "answers": {
+    "one_claim": { "type": "noul", "noul": 0.93 },
+    "tone": {
+      "type": "choice",
+      "choice": "neutral",
+      "confidence": 0.9,
+      "probabilities": { "neutral": 0.9, "promotional": 0.07, "hostile": 0.03 }
+    },
+    "clarity": {
+      "type": "score",
+      "score": 1.8,
+      "confidence": 0.85,
+      "legend": { "0": "Hard to follow.", "1": "Understandable with effort.", "2": "Clear on the first read." },
+      "probabilities": { "0": 0.02, "1": 0.16, "2": 0.82 }
+    }
+  },
+  "usage": { "input_tokens": 120, "output_tokens": 6 }
+}

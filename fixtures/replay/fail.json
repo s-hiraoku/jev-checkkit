@@ -1,0 +1,25 @@
+{
+  "definition": "../sample-approved.checker.json",
+  "state": {
+    "paragraph": "The town council wrecked the library again. Anyone who trusts their annual report is a fool, and the so-called renovation proves it.",
+    "claimsSource": true
+  },
+  "answers": {
+    "one_claim": { "type": "noul", "noul": 0.88 },
+    "tone": {
+      "type": "choice",
+      "choice": "hostile",
+      "confidence": 0.95,
+      "probabilities": { "neutral": 0.02, "promotional": 0.03, "hostile": 0.95 }
+    },
+    "clarity": {
+      "type": "score",
+      "score": 1.7,
+      "confidence": 0.8,
+      "legend": { "0": "Hard to follow.", "1": "Understandable with effort.", "2": "Clear on the first read." },
+      "probabilities": { "0": 0.05, "1": 0.2, "2": 0.75 }
+    },
+    "cites_source": { "type": "noul", "noul": 0.85 }
+  },
+  "usage": { "input_tokens": 124, "output_tokens": 8 }
+}
