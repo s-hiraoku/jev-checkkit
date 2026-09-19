@@ -1,0 +1,44 @@
+{
+  "id": "sample-paragraph",
+  "version": 1,
+  "subject": "A short English paragraph",
+  "approval": { "status": "approved", "at": "2026-09-19T00:00:00Z", "by": "fixture" },
+  "questions": [
+    {
+      "id": "one_claim",
+      "type": "noul",
+      "instructions": "Does the paragraph make exactly one main claim?",
+      "criteria": {
+        "true": "One central claim, with the other sentences supporting it.",
+        "false": "Several unrelated claims, or no claim at all."
+      }
+    },
+    {
+      "id": "tone",
+      "type": "choice",
+      "instructions": "Which tone does the paragraph take?",
+      "criteria": {
+        "neutral": "Plain and factual.",
+        "promotional": "Sells or praises something.",
+        "hostile": "Attacks a person or a group."
+      },
+      "options": { "neutral": "pass", "promotional": "review", "hostile": "fail" },
+      "confidenceFloor": 0.6
+    },
+    {
+      "id": "clarity",
+      "type": "score",
+      "instructions": "How clear is the paragraph to a first-time reader?",
+      "criteria": ["Hard to follow.", "Understandable with effort.", "Clear on the first read."],
+      "passAt": 1.5,
+      "failAt": 0.5,
+      "confidenceFloor": 0.6
+    },
+    {
+      "id": "cites_source",
+      "type": "noul",
+      "instructions": "Does the paragraph name the source of its claim?",
+      "applyWhen": { "path": "claimsSource", "op": "equals", "value": true }
+    }
+  ]
+}

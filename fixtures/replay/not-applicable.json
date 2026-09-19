@@ -1,0 +1,23 @@
+{
+  "definition": "../sample-approved.checker.json",
+  "state": {
+    "paragraph": "The town library now opens at nine on weekdays. The reading room reopened after its renovation, and the evening hours were kept."
+  },
+  "answers": {
+    "one_claim": { "type": "noul", "noul": 0.91 },
+    "tone": {
+      "type": "choice",
+      "choice": "neutral",
+      "confidence": 0.92,
+      "probabilities": { "neutral": 0.92, "promotional": 0.05, "hostile": 0.03 }
+    },
+    "clarity": {
+      "type": "score",
+      "score": 1.85,
+      "confidence": 0.88,
+      "legend": { "0": "Hard to follow.", "1": "Understandable with effort.", "2": "Clear on the first read." },
+      "probabilities": { "0": 0.01, "1": 0.13, "2": 0.86 }
+    }
+  },
+  "usage": { "input_tokens": 98, "output_tokens": 6 }
+}
