@@ -1,6 +1,6 @@
 # Jev checker plan
 
-This program ships a TypeSafe Jev checker runner and a design skill that writes approved definitions. It is for an operator who wants many small Jev questions composed in code, not a review chatbot. The rule is that a definition cannot run until the operator approves every item, and a report never authorizes merge, delete, publish, or send. The stack is PR1 then PR2. Hooks, product checklists, and per-target skills stay out.
+This program ships a TypeSafe Jev checker runner and a design skill that writes approved definitions. It is for an operator who wants many small Jev questions composed in code, not a review chatbot. The rule is that a definition cannot run until the operator approves every item, and a report never authorizes merge, delete, publish, or send. The stack is PR1 then PR2. Hooks, product checklists, and per-target skills stay out. The GitHub repository is https://github.com/s-hiraoku/jev-checkkit.
 
 ## How to read this
 
@@ -224,7 +224,7 @@ Settled by reading, not by a run.
 - Official TypeSafe docs state that Noul, Choice, and Score mix in one `POST https://api.typesafe.ai/v1/systemone` call and that added questions stay parallel. Source. [Introduction](https://docs.typesafe.ai/introduction) and [Quick start](https://docs.typesafe.ai/introduction/quickstart).
 - Official confidence docs state that Choice and Score carry `confidence`, and that Noul does not. Source. [Confidence](https://docs.typesafe.ai/confidence).
 - Official JS SDK is `@typesafe-ai/sdk` with `TypeSafeClient.systemOne`. Source. [JavaScript SDK](https://docs.typesafe.ai/sdk/javascript).
-- `tamaratran/fast-jev-compaction` keeps judgment in `src/` (`JevClient.ask`, `buildJevRequest`, `parseJevResponse`) and keeps the host in `hooks/` plus `.claude-plugin/`. Its `package.json` test command is `vitest run`. That repo is a compaction product. Do not copy `compact.ts`, `messages.ts`, or the hooks.
+- `tamaratran/fast-jev-compaction` keeps judgment in `src/` (`JevClient.ask`, `buildJevRequest`, `parseJevResponse`) and keeps the host in `hooks/` plus `.claude-plugin/`. Its `package.json` test command is `vitest run`. Compaction splits noul pairs with `batchCalls` against `maxRequestTokens` 30000, then `Promise.all`. The library `compact` throws. The hook `register` falls back to `next(event)` on throw or a weak `reductionRatio`. That policy is compaction, not a checker. Do not copy `compact.ts`, `messages.ts`, `batchCalls`, `questionsFor`, `decideCall`, `fitState`, or the hooks.
 
 Still unproven.
 
@@ -242,6 +242,7 @@ Still unproven.
 - Let the next agent invent the first product checklist. The operator has not approved one.
 - Treat "judgment-driven development" as a platform to scaffold. The valuable object is one approved definition plus one runner.
 - Hand-roll a second HTTP client when `@typesafe-ai/sdk` already parses the three answer types.
+- Port `batchCalls` or a 30000-token splitter into PR1. A fixture checklist fits in one request. Split later only if a measured subject overflows.
 - Put auto-action behind a flag. A flag becomes the next default. The report type must not grow an action field.
 
 ## Appendix C. Risks
