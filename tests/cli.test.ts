@@ -65,6 +65,41 @@ test("replay missing-answer exits 2 with cites_source error", () => {
   assert.deepEqual(verdicts(result)[3], ["cites_source", "error"]);
 });
 
+test("hallucination replay pass exits 0 with every item pass", () => {
+  const result = run(["--replay", "fixtures/replay/hallucination-pass.json"]);
+  assert.equal(result.code, 0, result.stdout);
+  assert.deepEqual(verdicts(result), [
+    ["consistent_with_source", "pass"],
+    ["added_details", "pass"],
+    ["admits_uncertainty", "pass"],
+    ["self_consistent", "pass"],
+  ]);
+});
+
+test("hallucination replay fail exits 1 and names the fabricated details", () => {
+  const result = run(["--replay", "fixtures/replay/hallucination-fail.json"]);
+  assert.equal(result.code, 1, result.stdout);
+  assert.deepEqual(verdicts(result), [
+    ["consistent_with_source", "fail"],
+    ["added_details", "fail"],
+    ["admits_uncertainty", "fail"],
+    ["self_consistent", "pass"],
+  ]);
+});
+
+test("hallucination dry-run without a source keeps only the source-free questions", () => {
+  const replay = JSON.parse(readFileSync(`${root}fixtures/replay/hallucination-pass.json`, "utf8")) as {
+    state: Record<string, unknown>;
+  };
+  delete replay.state.source;
+  const file = join(tmpdir(), `jev-check-no-source-${process.pid}.json`);
+  writeFileSync(file, JSON.stringify({ state: replay.state }));
+  const result = run(["--dry-run", "--definition", "fixtures/hallucination.checker.json", "--input", file]);
+  assert.equal(result.code, 0, result.stdout);
+  const request = json(result).request as { questions: Record<string, unknown> };
+  assert.deepEqual(Object.keys(request.questions), ["admits_uncertainty", "self_consistent"]);
+});
+
 test("a draft definition is refused with exit 2 before any key is needed", () => {
   const result = run(["--definition", "fixtures/sample-draft.checker.json", "--input", "fixtures/replay/pass.json"]);
   assert.equal(result.code, 2, result.stdout);
