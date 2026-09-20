@@ -134,6 +134,8 @@ npx jev-check --dry-run --definition <file> --input <file>
 npx jev-check --replay fixtures/replay/pass.json
 ```
 
+`npm test` はユニットテストです。`npm run test:e2e` はビルドしてから `tests/e2e/` の E2E を実行します。内容は [`docs/jev-checker-plan.md`](docs/jev-checker-plan.md) の live レーン 20 本（PR1 の CLI 10 本と PR2 のスキル 10 本）と、設計スキルの手順（草案の拒否、承認済み定義の `--dry-run`、Jev の実呼び出し）です。実際に Jev を呼ぶテストは `TYPESAFE_API_KEY` があるときだけ走り、無いときはスキップして失敗にはしません。キーの値は出力しません。
+
 `jev-check` はまず定義ファイルを解析して承認済みかどうかを確認し、`TYPESAFE_API_KEY` は Jev に送信する直前にだけ参照します。キーが無いときは live 呼び出しをせず、終了コード 3 で止まります。`--dry-run` と `--replay` はキー無しで動きます。キーの値はログにも出力にも出しません。
 
 ### 定義ファイル
