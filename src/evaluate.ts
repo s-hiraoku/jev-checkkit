@@ -1,5 +1,5 @@
 import type { EntryType, JsonValue } from "@typesafe-ai/sdk";
-import { isDeepStrictEqual } from "node:util";
+import { jsonEqual } from "./equal.js";
 import { buildRequest, type JevGateway, type JevReply } from "./jev.js";
 import { startTimer } from "./report.js";
 import type { ApprovedDefinition, Check, CheckReport, ItemResult, JevAnswer } from "./types.js";
@@ -26,7 +26,7 @@ export function skipReason(check: Check, state: EntryType): string | undefined {
     case "exists":
       return undefined;
     case "equals":
-      return isDeepStrictEqual(actual, when.value)
+      return jsonEqual(actual, when.value)
         ? undefined
         : `applyWhen: ${when.path} is ${JSON.stringify(actual)}, not ${JSON.stringify(when.value)}`;
   }

@@ -50,7 +50,7 @@ npx jev-check --definition <定義ファイル> --input <入力ファイル>
 
 ## 候補にする対象
 
-対象は利用者が名指ししたものなら何でも構いません。ここから選ぶ必要はなく、ここにないからといって対象外になるわけでもありません。次の 5 件は、この仕組みに向いていると考えて候補として挙げているものです。どれも設計スキルが案を出し、利用者が承認してから定義ファイルになります。製品として承認済みのチェックリストはまだありません。
+対象は利用者が名指ししたものなら何でも構いません。ここから選ぶ必要はなく、ここにないからといって対象外になるわけでもありません。次の 6 件は、この仕組みに向いていると考えて候補として挙げているものです。1 から 5 は、設計スキルが案を出し、利用者が承認してから定義ファイルになります。6 だけは Chrome 拡張に同梱した定義があり、Live 検査の前に設定画面でリスト全体を本人が承認します。
 
 ### 1. PR の説明と差分
 
@@ -92,9 +92,17 @@ PR は頻度が高く、既存のレビュー手順と比べてどれだけ価�
 
 抜け漏れを早く見つけるための用途です。誤判定すると対応の優先度を間違えるおそれがあります。障害票のクローズや外部への連絡は人が決めます。
 
+### 6. 表示中のウェブページ
+
+単位はブラウザで開いているページ 1 件。集めるのは URL、タイトル、メタ情報、本文、外部リンクのホストです。
+
+コードで見るのは HTTPS かどうか、著者や日付のメタの有無、語数、外部ホスト数です。Jev に聞くのは、発行元が特定できるか、ページの目的、利害の開示、主張の根拠、事実と意見の切り分け、出典のない具体値、本文の内部矛盾、断定と根拠の釣り合いです。一つの「信頼スコア」にはしません。サイト側 3 問と本文側 5 問を分けて見ます。
+
+誤判定は読み手の警戒をずらすだけに留めます。ページの遮断、公開、外部送信は行いません。定義は [`fixtures/page-credibility.checker.json`](fixtures/page-credibility.checker.json)、使い方は下の「[Chrome 拡張](#chrome-拡張)」です。
+
 ## 対象にしないもの
 
-対象は上の 5 件に限りませんが、次の 5 つは対象外です。
+対象は上の 6 件に限りませんが、次の 5 つは対象外です。
 
 - 一般的な文章の添削。Jev は校正ツールではありません。
 - 構文、型、テスト、カバレッジ。コードで判定できることを Jev に聞きません。
@@ -117,7 +125,7 @@ PR は頻度が高く、既存のレビュー手順と比べてどれだけ価�
 - 設計スキル `create-jev-cheker-skill`（`skills/create-jev-cheker-skill/`）。対象を調べ、チェックリスト案を出し、承認を受けてから定義ファイルを書きます。日常の検査ループには入りません。
 - 対象ごとの checker 定義。承認済みの質問、安定した ID、適用条件、閾値、バージョンを持つ JSON データです。
 - 共通の TypeScript ライブラリと CLI。入力の検証、Jev への一括送信、閾値の適用、欠落・失敗・対象外の扱い、使用量と時間の記録を担います。
-- Hook やプラグイン。イベントから自動で走らせたいときだけの薄い接続で、最初のリリースには含めません。
+- Chrome 拡張 `extension/`。表示中のタブを追跡し、同じランナーで Jev に問い合わせます。設定と詳細は別画面です。レポートからページを遮断したり送信したりはしません。
 
 ## CLI と定義ファイルの詳細
 
@@ -189,7 +197,7 @@ npx jev-check --replay fixtures/replay/pass.json
 }
 ```
 
-`fixtures/replay/` には、短い英文段落を対象にした pass、fail、review、not-applicable、missing-answer の 5 件と、次の節で使うハルシネーション検査の 2 件があります。いずれもサンプルで、製品用のチェックリストではありません。
+`fixtures/replay/` には、短い英文段落を対象にした pass、fail、review、not-applicable、missing-answer の 5 件、ハルシネーション検査の 2 件、表示中ページ検査の 3 件があります。段落用とハルシネーション用はサンプルです。ページ用は拡張が同梱する定義で、Live の前に設定画面での全体承認が要ります。
 
 ### 用例: AI の回答にハルシネーションがないか調べる
 
@@ -236,6 +244,45 @@ npx jev-check --definition fixtures/hallucination.checker.json --input my-answer
 - `source` を渡さないと、資料と突き合わせる 2 問は not_applicable になり、残りの 2 問だけを検査します。検出できる範囲はかなり狭くなります。
 - この定義はサンプルで、承認済みの製品チェックリストではありません。自分の用途で使うときは、設計スキル `create-jev-cheker-skill` で対象に合った質問を作り、全文を承認してから使ってください。
 - fail が出ても、回答を自動で差し戻したり公開を止めたりはしません。結果をどう扱うかは人が決めます。
+
+### Chrome 拡張
+
+表示中のタブを側面パネルが追跡し、同じ `page-credibility` 定義で Jev に問い合わせます。React で側面パネル、設定、詳細を描きます。
+
+```bash
+cd extension
+npm install
+npm test
+npm run build
+```
+
+Chrome で `chrome://extensions` を開き、デベロッパーモードをオンにして `extension/.output/chrome-mv3` を読み込みます。ツールバーのアイコンで側面パネルが開きます。
+
+1. 設定でチェックリスト全文を確認し、承認者名を入れてリスト全体を承認する。
+2. TypeSafe の API キーを保存する。キーは拡張のストレージにだけ置き、Jev への送信以外には使いません。
+3. 「表示中のタブを追跡して検査する」をオンのままにしておくと、タブ切替と読み込み完了のたびに再検査します。
+4. 側面パネルはサイトと本文を別レーンで出し、詳細画面で質問ごとと送った本文を見ます。
+
+判定は根拠です。拡張はページを遮断せず、レポートを外部へ転送もしません。キー無しで画面だけ見るときは `npm run preview` で replay 済みのプレビューが開きます。
+
+CLI からも同じ定義を試せます。
+
+```bash
+npx jev-check --replay fixtures/replay/page-credibility-pass.json
+npx jev-check --replay fixtures/replay/page-credibility-fail.json
+npx jev-check --dry-run --definition fixtures/page-credibility.checker.json --input fixtures/replay/page-credibility-pass.json
+```
+
+| id | レーン | 型 | 聞くこと |
+| --- | --- | --- | --- |
+| `identifiable_publisher` | サイト | noul | 発行元が特定できるか |
+| `site_purpose` | サイト | choice | 報道・解説 / 意見・分析 / 販売・集客 / 風刺・娯楽 / 判別できない |
+| `disclosed_incentives` | サイト | noul | 販売や働きかけがあるとき利害を出しているか |
+| `evidence_for_claims` | 本文 | score | 主張が本文上の根拠で支えられているか。本文が短いと not_applicable |
+| `separates_fact_and_opinion` | 本文 | noul | 事実と意見が読み分けられるか |
+| `unsourced_specifics` | 本文 | choice | 出典のない具体値。`none` は pass、`some` は review、`many` は fail |
+| `self_consistent` | 本文 | noul | 本文が食い違っていないか |
+| `certainty_matches_evidence` | 本文 | noul | 断定の強さが根拠に見合っているか |
 
 ### レポート
 

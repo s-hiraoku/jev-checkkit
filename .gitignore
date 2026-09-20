@@ -1,2 +1,4 @@
 node_modules/
 dist/
+extension/.output/
+extension/.wxt/

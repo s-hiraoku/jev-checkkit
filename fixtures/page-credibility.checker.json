@@ -1,0 +1,113 @@
+{
+  "id": "page-credibility",
+  "version": 1,
+  "subject": "The currently displayed web page: publisher signals plus the visible text's credibility",
+  "approval": { "status": "approved", "at": "2026-09-20T00:00:00Z", "by": "fixture" },
+  "questions": [
+    {
+      "id": "identifiable_publisher",
+      "type": "noul",
+      "instructions": "From the URL, title, site name, author, and visible text, can a real publisher, organization, or named person responsible for the page be identified?",
+      "criteria": {
+        "true": "A specific organization, publication, or named author is identifiable and presented as responsible for the content.",
+        "false": "The responsible party is missing, anonymous, or only a generic label with no identifiable publisher."
+      },
+      "passAt": 0.8,
+      "failAt": 0.2
+    },
+    {
+      "id": "site_purpose",
+      "type": "choice",
+      "instructions": "What is the primary purpose of this page, given the URL, title, and visible text?",
+      "criteria": {
+        "news_reference": "Reports or explains events or facts in a journalistic or encyclopedic way.",
+        "opinion_analysis": "Argues a position or interprets events; the author's view is the point.",
+        "commercial": "Exists mainly to sell a product, service, or lead.",
+        "satire_entertainment": "Humor, fiction, or entertainment that is not claiming to be a news report.",
+        "unclear": "Purpose cannot be determined, or incompatible purposes are mixed without labeling them."
+      },
+      "options": {
+        "news_reference": "pass",
+        "opinion_analysis": "review",
+        "commercial": "review",
+        "satire_entertainment": "review",
+        "unclear": "fail"
+      },
+      "confidenceFloor": 0.6
+    },
+    {
+      "id": "disclosed_incentives",
+      "type": "noul",
+      "instructions": "If the page is trying to sell something, raise money, or advocate for a party that would benefit, does it disclose that relationship?",
+      "criteria": {
+        "true": "There is no sales or advocacy pitch, or a pitch is present and the beneficiary or sponsor is named.",
+        "false": "The page pushes a product, donation, or political outcome while hiding who benefits."
+      },
+      "passAt": 0.8,
+      "failAt": 0.2
+    },
+    {
+      "id": "evidence_for_claims",
+      "type": "score",
+      "instructions": "How well does the visible text support the factual claims it makes?",
+      "criteria": [
+        "Factual claims are made with little or no supporting evidence, data, or sources on the page.",
+        "Some claims have sources or data, but important claims are left unsupported.",
+        "The main factual claims are backed by named sources, data, or documents the reader can inspect."
+      ],
+      "passAt": 1.5,
+      "failAt": 0.5,
+      "confidenceFloor": 0.6,
+      "applyWhen": { "path": "hasBody", "op": "equals", "value": true }
+    },
+    {
+      "id": "separates_fact_and_opinion",
+      "type": "noul",
+      "instructions": "Does the page keep factual statements and the author's opinions distinct enough that a reader can tell them apart?",
+      "criteria": {
+        "true": "Facts and judgments are labeled or clearly separated, or the page is clearly labeled as opinion throughout.",
+        "false": "Opinions are written as if they were established facts, or facts are framed as mere opinion to dodge responsibility."
+      },
+      "passAt": 0.8,
+      "failAt": 0.2,
+      "applyWhen": { "path": "hasBody", "op": "equals", "value": true }
+    },
+    {
+      "id": "unsourced_specifics",
+      "type": "choice",
+      "instructions": "Does the page present specific numbers, dates, quotes, or named events without a source the reader can check?",
+      "criteria": {
+        "none": "Specific facts are sourced, or the page stays at a level of generality that does not invent particulars.",
+        "some": "A few specifics lack a source, but they are not the main load-bearing claims.",
+        "many": "Load-bearing numbers, dates, quotes, or events are given as fact with no checkable source."
+      },
+      "options": { "none": "pass", "some": "review", "many": "fail" },
+      "confidenceFloor": 0.6,
+      "applyWhen": { "path": "hasBody", "op": "equals", "value": true }
+    },
+    {
+      "id": "self_consistent",
+      "type": "noul",
+      "instructions": "Is the visible text free of internal contradictions?",
+      "criteria": {
+        "true": "No two statements conflict on the same fact.",
+        "false": "The page states one thing and later the opposite, for example two different values for the same quantity."
+      },
+      "passAt": 0.8,
+      "failAt": 0.2,
+      "applyWhen": { "path": "hasBody", "op": "equals", "value": true }
+    },
+    {
+      "id": "certainty_matches_evidence",
+      "type": "noul",
+      "instructions": "Does the page match how certain it sounds to the evidence it actually shows?",
+      "criteria": {
+        "true": "Strong claims come with strong evidence; uncertain points are hedged or marked as unknown.",
+        "false": "The page states contested or thinly supported claims as settled fact, or hides strong evidence behind false uncertainty."
+      },
+      "passAt": 0.8,
+      "failAt": 0.2,
+      "applyWhen": { "path": "hasBody", "op": "equals", "value": true }
+    }
+  ]
+}

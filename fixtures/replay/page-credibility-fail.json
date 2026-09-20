@@ -1,0 +1,59 @@
+{
+  "definition": "../page-credibility.checker.json",
+  "state": {
+    "url": "http://deal-today.example/miracle-cure",
+    "hostname": "deal-today.example",
+    "protocol": "http:",
+    "title": "Doctors hate this: one pill reverses aging in 11 days",
+    "metaDescription": "Order now before the government bans it.",
+    "author": "",
+    "publishedAt": "",
+    "siteName": "Deal Today",
+    "language": "en",
+    "isHttps": false,
+    "hasAuthor": false,
+    "hasPublishedAt": false,
+    "hasBody": true,
+    "wordCount": 160,
+    "citationCount": 0,
+    "outboundHosts": ["checkout.example"],
+    "text": "A secret clinic proved that one unmarked capsule reverses aging in 11 days and cuts medical bills by 94 percent. The same clinic later said results appear in three days. Order a six-month supply before regulators ban the formula. No study, author, or manufacturer is named. The page repeats that every doctor already knows this and is hiding it."
+  },
+  "answers": {
+    "identifiable_publisher": { "type": "noul", "noul": 0.08 },
+    "site_purpose": {
+      "type": "choice",
+      "choice": "commercial",
+      "confidence": 0.93,
+      "probabilities": {
+        "news_reference": 0.02,
+        "opinion_analysis": 0.03,
+        "commercial": 0.93,
+        "satire_entertainment": 0.01,
+        "unclear": 0.01
+      }
+    },
+    "disclosed_incentives": { "type": "noul", "noul": 0.11 },
+    "evidence_for_claims": {
+      "type": "score",
+      "score": 0.12,
+      "confidence": 0.9,
+      "legend": {
+        "0": "Factual claims are made with little or no supporting evidence, data, or sources on the page.",
+        "1": "Some claims have sources or data, but important claims are left unsupported.",
+        "2": "The main factual claims are backed by named sources, data, or documents the reader can inspect."
+      },
+      "probabilities": { "0": 0.88, "1": 0.1, "2": 0.02 }
+    },
+    "separates_fact_and_opinion": { "type": "noul", "noul": 0.07 },
+    "unsourced_specifics": {
+      "type": "choice",
+      "choice": "many",
+      "confidence": 0.92,
+      "probabilities": { "none": 0.02, "some": 0.06, "many": 0.92 }
+    },
+    "self_consistent": { "type": "noul", "noul": 0.14 },
+    "certainty_matches_evidence": { "type": "noul", "noul": 0.06 }
+  },
+  "usage": { "input_tokens": 760, "output_tokens": 24 }
+}

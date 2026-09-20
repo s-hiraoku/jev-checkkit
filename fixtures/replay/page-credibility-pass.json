@@ -1,0 +1,59 @@
+{
+  "definition": "../page-credibility.checker.json",
+  "state": {
+    "url": "https://news.example.org/reports/bridge-delay",
+    "hostname": "news.example.org",
+    "protocol": "https:",
+    "title": "City delays river bridge opening after inspection, officials say",
+    "metaDescription": "The transportation bureau postponed the opening after hairline cracks were found in two piers.",
+    "author": "Mina Ito",
+    "publishedAt": "2026-09-18",
+    "siteName": "Example News",
+    "language": "en",
+    "isHttps": true,
+    "hasAuthor": true,
+    "hasPublishedAt": true,
+    "hasBody": true,
+    "wordCount": 210,
+    "citationCount": 3,
+    "outboundHosts": ["transport.example.gov", "doi.example.org"],
+    "text": "The city transportation bureau said Thursday it will delay the river bridge opening after inspectors found hairline cracks in two piers. Bureau director Ken Sato told reporters the cracks were documented in an inspection memo dated 12 September. The bureau posted that memo and a photograph of the south pier. Sato said no opening date has been set. The story cites the posted memo and does not add costs or causes beyond what the bureau released."
+  },
+  "answers": {
+    "identifiable_publisher": { "type": "noul", "noul": 0.94 },
+    "site_purpose": {
+      "type": "choice",
+      "choice": "news_reference",
+      "confidence": 0.91,
+      "probabilities": {
+        "news_reference": 0.91,
+        "opinion_analysis": 0.05,
+        "commercial": 0.02,
+        "satire_entertainment": 0.01,
+        "unclear": 0.01
+      }
+    },
+    "disclosed_incentives": { "type": "noul", "noul": 0.9 },
+    "evidence_for_claims": {
+      "type": "score",
+      "score": 1.85,
+      "confidence": 0.88,
+      "legend": {
+        "0": "Factual claims are made with little or no supporting evidence, data, or sources on the page.",
+        "1": "Some claims have sources or data, but important claims are left unsupported.",
+        "2": "The main factual claims are backed by named sources, data, or documents the reader can inspect."
+      },
+      "probabilities": { "0": 0.02, "1": 0.11, "2": 0.87 }
+    },
+    "separates_fact_and_opinion": { "type": "noul", "noul": 0.89 },
+    "unsourced_specifics": {
+      "type": "choice",
+      "choice": "none",
+      "confidence": 0.86,
+      "probabilities": { "none": 0.86, "some": 0.12, "many": 0.02 }
+    },
+    "self_consistent": { "type": "noul", "noul": 0.95 },
+    "certainty_matches_evidence": { "type": "noul", "noul": 0.87 }
+  },
+  "usage": { "input_tokens": 980, "output_tokens": 24 }
+}

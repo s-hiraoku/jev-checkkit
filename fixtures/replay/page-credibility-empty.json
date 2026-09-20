@@ -1,0 +1,39 @@
+{
+  "definition": "../page-credibility.checker.json",
+  "state": {
+    "url": "https://app.example/blank",
+    "hostname": "app.example",
+    "protocol": "https:",
+    "title": "Dashboard",
+    "metaDescription": "",
+    "author": "",
+    "publishedAt": "",
+    "siteName": "",
+    "language": "en",
+    "isHttps": true,
+    "hasAuthor": false,
+    "hasPublishedAt": false,
+    "hasBody": false,
+    "wordCount": 4,
+    "citationCount": 0,
+    "outboundHosts": [],
+    "text": "Loading workspace"
+  },
+  "answers": {
+    "identifiable_publisher": { "type": "noul", "noul": 0.35 },
+    "site_purpose": {
+      "type": "choice",
+      "choice": "unclear",
+      "confidence": 0.72,
+      "probabilities": {
+        "news_reference": 0.05,
+        "opinion_analysis": 0.08,
+        "commercial": 0.1,
+        "satire_entertainment": 0.05,
+        "unclear": 0.72
+      }
+    },
+    "disclosed_incentives": { "type": "noul", "noul": 0.81 }
+  },
+  "usage": { "input_tokens": 180, "output_tokens": 9 }
+}

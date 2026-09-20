@@ -182,3 +182,15 @@ test("a missing input file is refused with exit 2 and the path in the message", 
   assert.equal(result.code, 2, result.stdout);
   assert.match(String(json(result).error), /fixtures\/replay\/nope\.json/);
 });
+
+test("page-credibility replay pass exits 0", () => {
+  const result = run(["--replay", "fixtures/replay/page-credibility-pass.json"]);
+  assert.equal(result.code, 0, result.stdout);
+  assert.equal(verdicts(result).every(([, verdict]) => verdict === "pass"), true);
+});
+
+test("page-credibility replay fail exits 1", () => {
+  const result = run(["--replay", "fixtures/replay/page-credibility-fail.json"]);
+  assert.equal(result.code, 1, result.stdout);
+  assert.equal(verdicts(result).some(([, verdict]) => verdict === "fail"), true);
+});

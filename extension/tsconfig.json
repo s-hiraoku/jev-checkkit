@@ -1,0 +1,9 @@
+{
+  "extends": "./.wxt/tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "noUncheckedIndexedAccess": true,
+    "types": ["chrome"]
+  },
+  "include": ["src", "wxt.config.ts", "vite.preview.config.ts", ".wxt/wxt.d.ts"]
+}
