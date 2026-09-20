@@ -1,10 +1,10 @@
-// The ten PR2 live lanes from docs/jev-checker-plan.md, "Verify, live", run against skills/create-jev-cheker-skill.
+// The ten PR2 lanes from docs/jev-checker-plan.md, "Verify, live", as functional checks against skills/create-jev-cheker-skill.
 // Lane 1 compares trunk with head in the plan; trunk is this repository now, so only the head half is encoded.
 import assert from "node:assert/strict";
 import { cpSync, existsSync, readdirSync, writeFileSync } from "node:fs";
 import { basename, join, relative } from "node:path";
 import { test } from "node:test";
-import { jevCheck, json, readText, root, runNode, skillDir, tempDir, validator } from "./helpers.js";
+import { jevCheck, json, readText, root, runNode, skillDir, tempDir, validator } from "../support/cli.js";
 
 const GATE_HEADING = "## Whole-list approval stop";
 const SKILL_NAME = "create-jev-cheker-skill";

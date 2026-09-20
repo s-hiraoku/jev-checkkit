@@ -1,0 +1,48 @@
+{
+  "id": "ai-answer-hallucination",
+  "version": 1,
+  "subject": "An AI assistant's answer, checked against the source material it was given",
+  "approval": { "status": "draft" },
+  "questions": [
+    {
+      "id": "consistent_with_source",
+      "type": "noul",
+      "instructions": "Is the answer consistent with the source material, with no claim that contradicts it?",
+      "criteria": {
+        "true": "Every claim in the answer agrees with the source. Restating or summarising the source counts as consistent.",
+        "false": "At least one claim, number, date, or name in the answer says something different from the source."
+      },
+      "applyWhen": { "path": "source", "op": "exists" }
+    },
+    {
+      "id": "added_details",
+      "type": "choice",
+      "instructions": "Does the answer add details that the source material does not contain?",
+      "criteria": {
+        "none": "Nothing beyond what the source states.",
+        "harmless": "Adds phrasing or general background that does not change the meaning and is not presented as a fact from the source.",
+        "fabricated": "Adds specific facts, figures, dates, citations, quotes, or names that the source does not contain."
+      },
+      "options": { "none": "pass", "harmless": "review", "fabricated": "fail" },
+      "applyWhen": { "path": "source", "op": "exists" }
+    },
+    {
+      "id": "admits_uncertainty",
+      "type": "noul",
+      "instructions": "When the answer lacks the information needed for part of the question, does it say so instead of guessing?",
+      "criteria": {
+        "true": "Unsupported points are marked as uncertain, or the answer says the information is not available. An answer that only states supported claims also counts.",
+        "false": "The answer fills gaps with guesses and presents them as facts."
+      }
+    },
+    {
+      "id": "self_consistent",
+      "type": "noul",
+      "instructions": "Is the answer free of internal contradictions?",
+      "criteria": {
+        "true": "No two statements in the answer conflict with each other.",
+        "false": "The answer states one thing and later the opposite, for example two different values for the same quantity."
+      }
+    }
+  ]
+}

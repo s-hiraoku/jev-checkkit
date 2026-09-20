@@ -1,7 +1,7 @@
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const root = fileURLToPath(new URL("../..", import.meta.url));
@@ -54,7 +54,7 @@ export const items = (run: Run): { id: string; verdict: string; answer?: { type:
 
 export const verdicts = (run: Run): [string, string][] => items(run).map((item) => [item.id, item.verdict]);
 
-export const readText = (file: string): string => readFileSync(join(root, file), "utf8");
+export const readText = (file: string): string => readFileSync(resolve(root, file), "utf8");
 
 export const loadJson = (file: string): Record<string, unknown> => JSON.parse(readText(file)) as Record<string, unknown>;
 

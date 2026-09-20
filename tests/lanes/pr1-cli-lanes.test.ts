@@ -1,8 +1,9 @@
-// The ten PR1 live lanes from docs/jev-checker-plan.md, "Verify, live", run against the built dist/cli.js.
+// The ten PR1 lanes from docs/jev-checker-plan.md, "Verify, live", as functional checks against the built dist/cli.js.
+// They use --dry-run and --replay only, so they never talk to Jev; the skill-to-live path is tests/e2e.
 // Lane 1 compares trunk with head in the plan; trunk is this repository now, so only the head half is encoded.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { jevCheck, json, verdicts } from "./helpers.js";
+import { jevCheck, json, verdicts } from "../support/cli.js";
 
 const APPROVED = "fixtures/sample-approved.checker.json";
 const DRAFT = "fixtures/sample-draft.checker.json";

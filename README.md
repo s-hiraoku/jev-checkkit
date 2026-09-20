@@ -134,7 +134,11 @@ npx jev-check --dry-run --definition <file> --input <file>
 npx jev-check --replay fixtures/replay/pass.json
 ```
 
-`npm test` はユニットテストです。`npm run test:e2e` はビルドしてから `tests/e2e/` の E2E を実行します。内容は [`docs/jev-checker-plan.md`](docs/jev-checker-plan.md) の live レーン 20 本（PR1 の CLI 10 本と PR2 のスキル 10 本）と、設計スキルの手順（草案の拒否、承認済み定義の `--dry-run`、Jev の実呼び出し）です。実際に Jev を呼ぶテストは `TYPESAFE_API_KEY` があるときだけ走り、無いときはスキップして失敗にはしません。キーの値は出力しません。
+テストは 3 段あります。
+
+- `npm test`: ユニットテスト（`tests/*.test.ts`）。キー不要。
+- `npm run test:lanes`: 機能テスト（`tests/lanes/`）。ビルドしてから、[`docs/jev-checker-plan.md`](docs/jev-checker-plan.md) の live レーン 20 本（PR1 の CLI 10 本と PR2 のスキル 10 本）を `dist/cli.js` と `skills/` に対して実行します。`--dry-run` と `--replay` だけなので Jev は呼びません。キー不要。
+- `npm run test:e2e`: E2E（`tests/e2e/`）。AI の回答のハルシネーション検査を、設計スキルの草案から承認、承認済み定義の書き出し、忠実な回答と作り話の回答の 2 入力、Jev の実呼び出し、人が読むレポートまで一気に通します。Jev を呼ぶ手順は `TYPESAFE_API_KEY` があるときだけ走り、無いときはスキップして失敗にはしません。承認者は `e2e-test` で、承認済み定義はテストの一時ファイルにだけ書きます。キーの値は出力しません。
 
 `jev-check` はまず定義ファイルを解析して承認済みかどうかを確認し、`TYPESAFE_API_KEY` は Jev に送信する直前にだけ参照します。キーが無いときは live 呼び出しをせず、終了コード 3 で止まります。`--dry-run` と `--replay` はキー無しで動きます。キーの値はログにも出力にも出しません。
 
@@ -195,7 +199,7 @@ npx jev-check --replay fixtures/replay/pass.json
 
 ### 用例: AI の回答にハルシネーションがないか調べる
 
-AI が生成した回答を、その回答の根拠になった資料と突き合わせて「作り話をしていないか」を検査する例です。「使い方」の流れを一度通した結果がどんな定義ファイルになり、それをどう動かすかを示します。定義は [`fixtures/hallucination.checker.json`](fixtures/hallucination.checker.json)、replay の例は [`fixtures/replay/hallucination-pass.json`](fixtures/replay/hallucination-pass.json) と [`fixtures/replay/hallucination-fail.json`](fixtures/replay/hallucination-fail.json) にあります。
+AI が生成した回答を、その回答の根拠になった資料と突き合わせて「作り話をしていないか」を検査する例です。「使い方」の流れを一度通した結果がどんな定義ファイルになり、それをどう動かすかを示します。定義は [`fixtures/hallucination.checker.json`](fixtures/hallucination.checker.json)、replay の例は [`fixtures/replay/hallucination-pass.json`](fixtures/replay/hallucination-pass.json) と [`fixtures/replay/hallucination-fail.json`](fixtures/replay/hallucination-fail.json) にあります。承認前の草案として同じ質問を持つ [`fixtures/hallucination-draft.checker.json`](fixtures/hallucination-draft.checker.json) もあり、E2E テストが設計スキルの手順をたどる起点に使います。
 
 `state` には、モデルに投げた質問、モデルが返した回答、モデルに渡した資料の 3 つを入れます。
 
