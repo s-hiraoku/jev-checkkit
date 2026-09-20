@@ -1,0 +1,20 @@
+{
+  "definition": "../hallucination.checker.json",
+  "state": {
+    "question": "When does the town library open on weekdays, and did visits change after the renovation?",
+    "source": "The town library opens at nine on weekdays. According to the library's annual report, visits doubled after the reading room was renovated.",
+    "answer": "It opens at eight on weekdays and closes at six. Visits tripled after the 2023 renovation, which cost 1.2 million dollars according to the council's budget review."
+  },
+  "answers": {
+    "consistent_with_source": { "type": "noul", "noul": 0.08 },
+    "added_details": {
+      "type": "choice",
+      "choice": "fabricated",
+      "confidence": 0.94,
+      "probabilities": { "none": 0.01, "harmless": 0.05, "fabricated": 0.94 }
+    },
+    "admits_uncertainty": { "type": "noul", "noul": 0.1 },
+    "self_consistent": { "type": "noul", "noul": 0.9 }
+  },
+  "usage": { "input_tokens": 176, "output_tokens": 8 }
+}
