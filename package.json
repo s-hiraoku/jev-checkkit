@@ -12,7 +12,9 @@
   "scripts": {
     "build": "tsc && node -e \"fs.chmodSync('dist/cli.js', 0o755)\"",
     "typecheck": "tsc --noEmit",
-    "test": "node --import tsx --test tests/*.test.ts"
+    "test": "node --import tsx --test tests/*.test.ts",
+    "test:lanes": "npm run build && node --import tsx --test tests/lanes/*.test.ts",
+    "test:e2e": "npm run build && node --import tsx --test tests/e2e/*.test.ts"
   },
   "dependencies": {
     "@typesafe-ai/sdk": "0.6.0"
