@@ -1,0 +1,10 @@
+{
+  "name": "jev-checkkit",
+  "install": "npm ci && npm run build && npm ci --prefix extension && npm run build --prefix extension",
+  "terminals": [
+    {
+      "name": "extension-preview",
+      "command": "npm run extension:preview"
+    }
+  ]
+}
