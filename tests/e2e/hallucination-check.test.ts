@@ -1,7 +1,7 @@
 // End to end: hallucination checking of an AI answer against the source it was given.
 //   1. prepare the question and the source handed to a model
 //   2. create-jev-cheker-skill drafts the lie-detector checklist, the operator adjusts it, then approves the whole list
-//   3. write the approved definition (a test file; fixtures/hallucination.checker.json stays the only committed copy, a sample)
+//   3. write the approved definition (a test file; fixtures/hallucination.checker.json is the committed operator-approved copy)
 //   4. produce two answers, one faithful to the source and one that fabricates facts
 //   5. run jev-check live with state { question, source, answer }
 //   6. the faithful answer is not failed for fabrication, the fabricated one is fail or review, and a person can read the report
