@@ -50,7 +50,7 @@ npx jev-check --definition <定義ファイル> --input <入力ファイル>
 
 ## 候補にする対象
 
-対象は利用者が名指ししたものなら何でも構いません。ここから選ぶ必要はなく、ここにないからといって対象外になるわけでもありません。次の 5 件は、この仕組みに向いていると考えて候補として挙げているものです。どれも設計スキルが案を出し、利用者が承認してから定義ファイルになります。製品として承認済みのチェックリストはまだありません。
+対象は利用者が名指ししたものなら何でも構いません。ここから選ぶ必要はなく、ここにないからといって対象外になるわけでもありません。次の 5 件は、この仕組みに向いていると考えて候補として挙げているものです。どれも設計スキルが案を出し、利用者が承認してから定義ファイルになります。製品として承認済みのチェックリストは、AI の回答のハルシネーション検査（[`fixtures/hallucination.checker.json`](fixtures/hallucination.checker.json)）が 1 件あります。下の 5 件は候補のままです。
 
 ### 1. PR の説明と差分
 
@@ -195,11 +195,11 @@ npx jev-check --replay fixtures/replay/pass.json
 }
 ```
 
-`fixtures/replay/` には、短い英文段落を対象にした pass、fail、review、not-applicable、missing-answer の 5 件と、次の節で使うハルシネーション検査の 2 件があります。いずれもサンプルで、製品用のチェックリストではありません。
+`fixtures/replay/` には、短い英文段落を対象にした pass、fail、review、not-applicable、missing-answer の 5 件と、次の節で使うハルシネーション検査の 2 件があります。短い英文段落の定義はサンプルです。ハルシネーション検査の定義は、次の節の承認済みチェックリストです。replay ファイルは判定の流れを試す入力であり、レポートは判断材料だけです。
 
 ### 用例: AI の回答にハルシネーションがないか調べる
 
-AI が生成した回答を、その回答の根拠になった資料と突き合わせて「作り話をしていないか」を検査する例です。「使い方」の流れを一度通した結果がどんな定義ファイルになり、それをどう動かすかを示します。定義は [`fixtures/hallucination.checker.json`](fixtures/hallucination.checker.json)、replay の例は [`fixtures/replay/hallucination-pass.json`](fixtures/replay/hallucination-pass.json) と [`fixtures/replay/hallucination-fail.json`](fixtures/replay/hallucination-fail.json) にあります。承認前の草案として同じ質問を持つ [`fixtures/hallucination-draft.checker.json`](fixtures/hallucination-draft.checker.json) もあり、E2E テストが設計スキルの手順をたどる起点に使います。
+AI が生成した回答を、その回答の根拠になった資料と突き合わせて「作り話をしていないか」を検査する定義です。「使い方」の流れどおり、4 問を全文承認して [`fixtures/hallucination.checker.json`](fixtures/hallucination.checker.json) に置いてあります。replay の例は [`fixtures/replay/hallucination-pass.json`](fixtures/replay/hallucination-pass.json) と [`fixtures/replay/hallucination-fail.json`](fixtures/replay/hallucination-fail.json) です。同じ質問の草案 [`fixtures/hallucination-draft.checker.json`](fixtures/hallucination-draft.checker.json) は、E2E テストが設計スキルの手順をたどる起点です。E2E の試験用承認者名は製品の `approval.by` には使いません。
 
 `state` には、モデルに投げた質問、モデルが返した回答、モデルに渡した資料の 3 つを入れます。
 
@@ -240,7 +240,7 @@ npx jev-check --definition fixtures/hallucination.checker.json --input my-answer
 
 - Jev が比べる相手は `state.source` として渡した資料だけで、世の中の事実と照合するわけではありません。資料そのものが間違っていれば、それに忠実な回答は pass します。pass は「資料と矛盾していない」という意味で、内容が真実であることの証明ではありません。
 - `source` を渡さないと、資料と突き合わせる 2 問は not_applicable になり、残りの 2 問だけを検査します。検出できる範囲はかなり狭くなります。
-- この定義はサンプルで、承認済みの製品チェックリストではありません。自分の用途で使うときは、設計スキル `create-jev-cheker-skill` で対象に合った質問を作り、全文を承認してから使ってください。
+- この定義は、利用者が 4 問を全文承認したチェックリストです。質問を変えるときは `version` を上げ、全体をもう一度承認してください。別の対象には、設計スキル `create-jev-cheker-skill` で質問を作り、全文を承認してから使ってください。
 - fail が出ても、回答を自動で差し戻したり公開を止めたりはしません。結果をどう扱うかは人が決めます。
 
 ### レポート

@@ -2,7 +2,11 @@
   "id": "ai-answer-hallucination",
   "version": 1,
   "subject": "An AI assistant's answer, checked against the source material it was given",
-  "approval": { "status": "approved", "at": "2026-09-20T00:00:00Z", "by": "fixture" },
+  "approval": {
+    "status": "approved",
+    "at": "2026-09-21T05:50:33Z",
+    "by": "真一 平奥 (s-hiraoku)"
+  },
   "questions": [
     {
       "id": "consistent_with_source",
@@ -12,6 +16,8 @@
         "true": "Every claim in the answer agrees with the source. Restating or summarising the source counts as consistent.",
         "false": "At least one claim, number, date, or name in the answer says something different from the source."
       },
+      "passAt": 0.8,
+      "failAt": 0.2,
       "applyWhen": { "path": "source", "op": "exists" }
     },
     {
@@ -34,7 +40,9 @@
       "criteria": {
         "true": "Unsupported points are marked as uncertain, or the answer says the information is not available. An answer that only states supported claims also counts.",
         "false": "The answer fills gaps with guesses and presents them as facts."
-      }
+      },
+      "passAt": 0.8,
+      "failAt": 0.2
     },
     {
       "id": "self_consistent",
@@ -43,7 +51,9 @@
       "criteria": {
         "true": "No two statements in the answer conflict with each other.",
         "false": "The answer states one thing and later the opposite, for example two different values for the same quantity."
-      }
+      },
+      "passAt": 0.8,
+      "failAt": 0.2
     }
   ]
 }
